@@ -1,0 +1,1952 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>Шпаргалка Angular 22</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Space+Grotesk:wght@500;700&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+/* Раскладка: левое оглавление-«дерево проекта» + лента разделов; каждый раздел — один полный файл кода */
+:root {
+    --bg: #f7f7fa;
+    --surface: #ffffff;
+    --fg: #1b1d27;
+    --muted: #5d6175;
+    --line: #dfe1ea;
+    --accent: #c3002f;
+    --accent-soft: #fbe7ec;
+    --code-bg: #f1f2f7;
+    --code-fg: #22253a;
+    --c-comment: #6b7089;
+    --c-key: #a3123e;
+    --c-str: #1f6b45;
+    --c-tag: #2a54b0;
+    --font-display: "Space Grotesk", "Segoe UI", system-ui, sans-serif;
+    --font-body: "Inter", "Segoe UI", system-ui, sans-serif;
+    --font-mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
+}
+@media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+        --bg: #12131a; --surface: #1a1c25; --fg: #e8e9f0; --muted: #a2a6ba; --line: #2c2f3d;
+        --accent: #ff5577; --accent-soft: #3a1823; --code-bg: #161821; --code-fg: #e3e5f0;
+        --c-comment: #8a8fa8; --c-key: #ff7a98; --c-str: #7fd3a4; --c-tag: #8fb1ff;
+        color-scheme: dark;
+    }
+}
+:root[data-theme="dark"] {
+    --bg: #12131a; --surface: #1a1c25; --fg: #e8e9f0; --muted: #a2a6ba; --line: #2c2f3d;
+    --accent: #ff5577; --accent-soft: #3a1823; --code-bg: #161821; --code-fg: #e3e5f0;
+    --c-comment: #8a8fa8; --c-key: #ff7a98; --c-str: #7fd3a4; --c-tag: #8fb1ff;
+    color-scheme: dark;
+}
+* { box-sizing: border-box; }
+body {
+    background: var(--bg);
+    color: var(--fg);
+    font-family: var(--font-body);
+    font-size: 15px;
+    line-height: 1.55;
+}
+body::before {
+    content: ""; position: fixed; inset: 0 0 auto; height: env(safe-area-inset-top, 0px);
+    z-index: 10; background: var(--bg);
+}
+.page {
+    display: grid;
+    grid-template-columns: 250px minmax(0, 1fr);
+    gap: 32px;
+    max-width: 1280px;
+    margin: 0 auto;
+    padding-block: 24px 64px;
+    padding-left: max(16px, env(safe-area-inset-left, 0px));
+    padding-right: max(16px, env(safe-area-inset-right, 0px));
+}
+.toc {
+    position: sticky;
+    top: calc(env(safe-area-inset-top, 0px) + 16px);
+    align-self: start;
+    max-height: calc(100vh - 32px);
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+.brand {
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: 20px;
+    letter-spacing: -0.01em;
+}
+.brand span { color: var(--accent); }
+.search {
+    width: 100%;
+    padding: 8px 10px;
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    background: var(--surface);
+    color: var(--fg);
+    font: inherit;
+}
+.search:focus-visible, a:focus-visible, button:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+}
+.toc ol {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    font-family: var(--font-mono);
+    font-size: 13px;
+}
+.toc a {
+    display: block;
+    padding: 4px 8px;
+    border-radius: 6px;
+    color: var(--muted);
+    text-decoration: none;
+}
+.toc a:hover { color: var(--fg); background: var(--code-bg); }
+.toc a.active { color: var(--accent); background: var(--accent-soft); }
+.toc .file { color: inherit; opacity: 0.7; }
+main { min-width: 0; display: flex; flex-direction: column; gap: 48px; }
+.intro h1 {
+    font-family: var(--font-display);
+    font-size: clamp(28px, 4vw, 40px);
+    line-height: 1.1;
+    margin: 0 0 12px;
+    text-wrap: balance;
+}
+.intro p { margin: 0 0 8px; max-width: 70ch; color: var(--muted); }
+.legend {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 12px;
+    font-size: 13px;
+}
+.tag {
+    display: inline-block;
+    padding: 1px 8px;
+    border-radius: 999px;
+    font-size: 12px;
+    font-weight: 500;
+    border: 1px solid var(--line);
+    color: var(--muted);
+    white-space: nowrap;
+}
+.tag.exp { border-color: var(--accent); color: var(--accent); }
+section { min-width: 0; scroll-margin-top: 16px; }
+section > header {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 8px 12px;
+    margin-bottom: 8px;
+}
+section h2 {
+    font-family: var(--font-display);
+    font-size: 24px;
+    margin: 0;
+}
+.path { font-family: var(--font-mono); font-size: 13px; color: var(--muted); }
+section > p { margin: 0 0 12px; max-width: 75ch; color: var(--muted); }
+.code {
+    position: relative;
+    min-width: 0;
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    background: var(--code-bg);
+}
+.code + .code { margin-top: 12px; }
+.code .bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 8px 6px 14px;
+    border-bottom: 1px solid var(--line);
+    font-family: var(--font-mono);
+    font-size: 12px;
+    color: var(--muted);
+}
+.copy {
+    border: 1px solid var(--line);
+    background: var(--surface);
+    color: var(--fg);
+    border-radius: 6px;
+    padding: 3px 10px;
+    font: 500 12px var(--font-body);
+    cursor: pointer;
+}
+.copy:hover { border-color: var(--accent); }
+pre {
+    margin: 0;
+    padding: 14px;
+    overflow-x: auto;
+    font-family: var(--font-mono);
+    font-size: 13px;
+    line-height: 1.6;
+    color: var(--code-fg);
+    tab-size: 4;
+}
+.t-c { color: var(--c-comment); font-style: italic; }
+.t-s { color: var(--c-str); }
+.t-k { color: var(--c-key); }
+.t-t { color: var(--c-tag); }
+.empty { color: var(--muted); display: none; }
+@media (max-width: 860px) {
+    .page { grid-template-columns: minmax(0, 1fr); gap: 20px; }
+    .toc { position: static; max-height: none; }
+    .toc ol { flex-direction: row; flex-wrap: wrap; }
+    .toc .file { display: none; }
+}
+@media (prefers-reduced-motion: no-preference) {
+    html { scroll-behavior: smooth; }
+}
+</style>
+
+<div class="page">
+    <nav class="toc" aria-label="Разделы шпаргалки">
+        <div class="brand">ng<span>/</span>шпаргалка</div>
+        <input id="filter" class="search" type="search" placeholder="Поиск по коду: linkedSignal, canMatch…" aria-label="Поиск по коду">
+        <ol id="toc-list"></ol>
+    </nav>
+
+    <main id="content">
+        <div class="intro">
+            <h1>Шпаргалка Angular 22</h1>
+            <p>Каждый раздел — один файл, в котором собрано всё, что может в нём встретиться: все свойства декоратора, все варианты функций и опций. Код написан для чтения, а не для запуска как есть: в реальном файле вы возьмёте только нужное.</p>
+            <p>Стек как в курсе: standalone, zoneless, Signals, OnPush, строгий TypeScript. Устаревшее помечено, чтобы вы узнавали его в чужом коде.</p>
+            <div class="legend">
+                <span class="tag exp">экспериментальное</span> API может поменяться, сверяйтесь с angular.dev
+                <span class="tag">устаревшее</span> встречается в старом коде, в новом не пишем
+            </div>
+        </div>
+        <p id="empty" class="empty">Ничего не найдено. Попробуйте имя функции или декоратора.</p>
+    </main>
+</div>
+
+<!-- ===================== ДАННЫЕ: каждый <script type="text/x-code"> — один блок кода ===================== -->
+
+<script type="text/x-code" data-section="bootstrap" data-title="Запуск приложения" data-path="main.ts · app.config.ts" data-lead="Точка входа и глобальные провайдеры. Всё, что раньше жило в AppModule, теперь — функции provide*.">
+// ── main.ts ─────────────────────────────────────────────────────────
+import { bootstrapApplication } from '@angular/platform-browser';
+
+import { AppComponent } from './app/app';
+import { appConfig } from './app/app.config';
+
+bootstrapApplication(AppComponent, appConfig).catch((error) => console.error(error));
+
+// ── app.config.ts ───────────────────────────────────────────────────
+import { registerLocaleData } from '@angular/common';
+import { provideHttpClient, withFetch, withInterceptors } from '@angular/common/http';
+import localeRu from '@angular/common/locales/ru';
+import {
+    type ApplicationConfig,
+    DEFAULT_CURRENCY_CODE,
+    ErrorHandler,
+    LOCALE_ID,
+    inject,
+    provideAppInitializer,
+    provideBrowserGlobalErrorListeners,
+    provideZonelessChangeDetection, // в новых проектах zoneless уже по умолчанию — провайдер можно не писать
+} from '@angular/core';
+import { provideClientHydration, withEventReplay, withIncrementalHydration } from '@angular/platform-browser';
+import {
+    PreloadAllModules,
+    provideRouter,
+    withComponentInputBinding,
+    withInMemoryScrolling,
+    withPreloading,
+    withRouterConfig,
+    withViewTransitions,
+} from '@angular/router';
+
+registerLocaleData(localeRu);
+
+export const appConfig: ApplicationConfig = {
+    providers: [
+        provideBrowserGlobalErrorListeners(), // ловит window.onerror и unhandledrejection
+        provideZonelessChangeDetection(),
+        provideRouter(
+            routes,
+            withComponentInputBinding(), // параметры маршрута → input() компонента
+            withViewTransitions(), // View Transitions API при навигации
+            withInMemoryScrolling({ scrollPositionRestoration: 'enabled', anchorScrolling: 'enabled' }),
+            withPreloading(PreloadAllModules),
+            withRouterConfig({ paramsInheritanceStrategy: 'always' }),
+        ),
+        provideHttpClient(withFetch(), withInterceptors([authInterceptor])),
+        provideClientHydration(withEventReplay(), withIncrementalHydration()), // для SSR
+        provideAppInitializer(() => inject(ConfigService).load()), // до старта приложения; может вернуть Promise/Observable
+        { provide: LOCALE_ID, useValue: 'ru' },
+        { provide: DEFAULT_CURRENCY_CODE, useValue: 'RUB' },
+        { provide: ErrorHandler, useClass: AppErrorHandler },
+    ],
+};
+
+// ── Свой обработчик ошибок ──────────────────────────────────────────
+export class AppErrorHandler implements ErrorHandler {
+    handleError(error: unknown): void {
+        // отправить в мониторинг, показать тост
+        console.error(error);
+    }
+}
+</script>
+
+<script type="text/x-code" data-section="component" data-title="Компонент" data-path="studio-card.component.ts" data-lead="Все свойства @Component и всё, что бывает внутри класса: входы, выходы, model, запросы, host, внедрение, жизненный цикл.">
+import { CurrencyPipe, NgTemplateOutlet } from '@angular/common';
+import {
+    type AfterContentChecked,
+    type AfterContentInit,
+    type AfterViewChecked,
+    type AfterViewInit,
+    ChangeDetectionStrategy,
+    ChangeDetectorRef,
+    Component,
+    CUSTOM_ELEMENTS_SCHEMA,
+    DestroyRef,
+    type DoCheck,
+    ElementRef,
+    type OnChanges,
+    type OnDestroy,
+    type OnInit,
+    type SimpleChanges,
+    TemplateRef,
+    ViewEncapsulation,
+    afterNextRender,
+    afterRenderEffect,
+    booleanAttribute,
+    computed,
+    contentChild,
+    contentChildren,
+    effect,
+    inject,
+    input,
+    linkedSignal,
+    model,
+    numberAttribute,
+    output,
+    signal,
+    viewChild,
+    viewChildren,
+} from '@angular/core';
+import { outputFromObservable } from '@angular/core/rxjs-interop';
+import { interval } from 'rxjs';
+
+@Component({
+    // ── Селектор ──
+    selector: 'app-studio-card', // элемент: <app-studio-card>
+    // selector: 'button[app-icon-button]',  // атрибут на конкретном теге
+    // selector: '[appCard], app-card',      // несколько вариантов через запятую
+
+    // standalone: true — по умолчанию с v19, писать не нужно
+    imports: [CurrencyPipe, NgTemplateOutlet, IconComponent], // компоненты, директивы, pipes шаблона
+
+    // ── Шаблон: одно из двух ──
+    templateUrl: './studio-card.component.html',
+    // template: `<h3>{{ studio().name }}</h3>`,
+
+    // ── Стили: одно из ──
+    styleUrl: './studio-card.component.scss',
+    // styleUrls: ['./a.scss', './b.scss'],
+    // styles: `:host { display: block; }`,   // строка или массив строк
+
+    changeDetection: ChangeDetectionStrategy.OnPush, // Default — устаревший подход
+    encapsulation: ViewEncapsulation.Emulated, // Emulated (по умолчанию) | ShadowDom | None
+
+    // ── Привязки к самому тегу компонента ──
+    host: {
+        class: 'studio-card', // статический класс
+        role: 'article', // статический атрибут
+        '[class.featured]': 'studio().featured',
+        '[class]': 'hostClasses()', // строка | массив | объект
+        '[style.--card-accent]': 'accent()', // CSS-переменная
+        '[attr.aria-busy]': 'loading()',
+        '[tabindex]': 'disabled() ? -1 : 0',
+        '(click)': 'onHostClick($event)',
+        '(keydown.enter)': 'open()',
+        '(document:keydown.escape)': 'close()', // глобальные цели: document | window | body
+        '(window:resize)': 'measure()',
+    },
+
+    // ── Композиция поведения ──
+    hostDirectives: [
+        TooltipDirective, // без проброса входов
+        { directive: TooltipDirective, inputs: ['appTooltip: label'], outputs: ['shown'] },
+    ],
+
+    // ── DI на уровне компонента ──
+    providers: [CardStore], // свой экземпляр на каждый компонент; видят дети и спроецированный контент
+    viewProviders: [CardTheme], // видят только дети из своего шаблона, НЕ ng-content
+
+    exportAs: 'studioCard', // <app-studio-card #card="studioCard">
+    preserveWhitespaces: false, // по умолчанию false
+    schemas: [CUSTOM_ELEMENTS_SCHEMA], // разрешить неизвестные теги (веб-компоненты)
+
+    // устаревшее, встречается в старом коде:
+    // inputs: ['studio'], outputs: ['select'], queries: {...}, animations: [...] (@angular/animations)
+})
+export class StudioCardComponent
+    implements OnChanges, OnInit, DoCheck, AfterContentInit, AfterContentChecked, AfterViewInit, AfterViewChecked, OnDestroy
+{
+    // ── Внедрение зависимостей: inject() вместо параметров конструктора ──
+    private readonly store = inject(CardStore);
+    private readonly host = inject<ElementRef<HTMLElement>>(ElementRef);
+    private readonly cdr = inject(ChangeDetectorRef);
+    private readonly destroyRef = inject(DestroyRef);
+    private readonly logger = inject(Logger, { optional: true }); // null, если нет провайдера
+
+    // ── Входы (сигналы, только чтение) ──
+    readonly studio = input.required<Studio>(); // обязательный
+    readonly size = input<'s' | 'm' | 'l'>('m'); // со значением по умолчанию
+    readonly maxRating = input(5, { transform: numberAttribute }); // max-rating="10" → 10
+    readonly compact = input(false, { transform: booleanAttribute }); // <app-studio-card compact>
+    readonly label = input('', { alias: 'aria-label' }); // снаружи называется иначе
+    readonly price = input.required({ transform: (value: string | number) => Number(value) });
+
+    // ── Двусторонняя привязка: [(favorite)]="isFav" ──
+    readonly favorite = model(false); // читать favorite(), менять favorite.set(true) — родитель узнает
+    readonly rating = model.required<number>();
+
+    // ── Выходы ──
+    readonly select = output<string>(); // (select)="onSelect($event)"
+    readonly closed = output<void>(); // this.closed.emit()
+    readonly ping = outputFromObservable(interval(1000)); // выход из Observable
+
+    // ── Запросы к своему шаблону (сигналы) ──
+    readonly titleEl = viewChild<ElementRef<HTMLHeadingElement>>('title'); // #title в шаблоне
+    readonly cover = viewChild.required('cover', { read: ElementRef }); // read — что именно получить
+    readonly icon = viewChild(IconComponent); // по типу
+    readonly rows = viewChildren<ElementRef<HTMLLIElement>>('row');
+
+    // ── Запросы к спроецированному контенту (ng-content) ──
+    readonly actionsTpl = contentChild('actions', { read: TemplateRef });
+    readonly badges = contentChildren(BadgeComponent, { descendants: true }); // искать и во вложенных
+
+    // ── Локальное состояние ──
+    protected readonly expanded = signal(false);
+    protected readonly ratingPercent = computed(() => (this.studio().rating ?? 0) / this.maxRating() * 100);
+    protected readonly hostClasses = computed(() => ({ compact: this.compact(), [`size-${this.size()}`]: true }));
+    protected readonly accent = computed(() => (this.studio().featured ? '#6b5bd6' : '#d0d4e0'));
+    protected readonly loading = signal(false);
+    protected readonly disabled = computed(() => !this.studio().isOpen);
+    // состояние, которое сбрасывается при смене источника, но его можно менять вручную
+    protected readonly selectedSlot = linkedSignal(() => this.studio().slots[0]);
+
+    constructor() {
+        // эффект: побочное действие при изменении сигналов; уничтожается вместе с компонентом
+        effect((onCleanup) => {
+            const id = this.studio().id;
+            const timer = setTimeout(() => this.logger?.log('показана', id), 1000);
+            onCleanup(() => clearTimeout(timer));
+        });
+
+        // один раз после первого рендера, только в браузере (SSR-безопасно)
+        afterNextRender(() => this.host.nativeElement.scrollIntoView({ block: 'nearest' }));
+
+        // после каждого рендера, с фазами чтения и записи DOM
+        afterRenderEffect({
+            earlyRead: () => this.host.nativeElement.offsetHeight,
+            write: (height) => this.host.nativeElement.style.setProperty('--h', `${height()}px`),
+        });
+
+        this.destroyRef.onDestroy(() => this.store.reset()); // очистка без ngOnDestroy
+    }
+
+    // ── Методы для шаблона и host ──
+    protected onHostClick(event: MouseEvent): void {
+        event.stopPropagation();
+        this.select.emit(this.studio().id);
+    }
+
+    protected toggleFavorite(): void {
+        this.favorite.update((value) => !value);
+    }
+
+    protected open(): void {
+        this.expanded.set(true);
+    }
+
+    protected close(): void {
+        this.expanded.set(false);
+    }
+
+    protected measure(): void {
+        // markForCheck нужен только для НЕ-сигнальных полей в OnPush/zoneless
+        this.cdr.markForCheck();
+    }
+
+    // ── Хуки жизненного цикла (порядок вызова) ──
+    ngOnChanges(changes: SimpleChanges): void {} // изменились @Input (для input() — computed/effect)
+    ngOnInit(): void {} // первые входы получены
+    ngDoCheck(): void {} // каждая проверка — почти никогда не нужен
+    ngAfterContentInit(): void {} // контент ng-content готов
+    ngAfterContentChecked(): void {}
+    ngAfterViewInit(): void {} // свой шаблон готов → лучше afterNextRender
+    ngAfterViewChecked(): void {}
+    ngOnDestroy(): void {} // → лучше DestroyRef
+}
+
+// ── Устаревший синтаксис, который встретится в чужом коде ──
+// @Input({ required: true }) studio!: Studio;
+// @Input({ transform: booleanAttribute }) compact = false;
+// @Output() select = new EventEmitter<string>();
+// @ViewChild('title') titleEl?: ElementRef;   @ViewChildren / @ContentChild / @ContentChildren
+// @HostBinding('class.featured') featured = false;
+// @HostListener('window:resize', ['$event']) onResize(e: UIEvent) {}
+// constructor(private store: CardStore) {}   // DI через параметры
+</script>
+
+<script type="text/x-code" data-section="templates" data-title="Шаблоны" data-path="studio-card.component.html" data-lead="Привязки, события, control flow, @defer, @let, ссылки на элементы, проекция, выражения.">
+<!-- ── Интерполяция и выражения ── -->
+<h3 #title>{{ studio().name }}</h3>
+<p>{{ studio().city ?? 'Город не указан' }} · {{ price() * hours() }} ₽</p>
+<p>{{ `Студия ${studio().name}` }}</p>                     <!-- шаблонные строки -->
+<p>{{ 2 ** 10 }} {{ 'rating' in studio() }} {{ typeof price() }} {{ void 0 }}</p>
+<p>{{ user?.profile?.name }}</p>                             <!-- безопасная навигация -->
+<p>{{ maybeStudio!.name }}</p>                               <!-- non-null: «точно не null» -->
+<p>{{ $any(legacy).field }}</p>                              <!-- отключить проверку типа -->
+
+<!-- ── Привязка свойств, атрибутов, классов, стилей ── -->
+<img [src]="studio().coverUrl" [alt]="studio().name" />
+<button [disabled]="!studio().isOpen">Забронировать</button>
+<td [attr.colspan]="span()"></td>                            <!-- атрибут, а не свойство DOM -->
+<div [attr.aria-label]="label() || null"></div>              <!-- null удаляет атрибут -->
+<div [class.featured]="studio().featured"></div>
+<div [class]="{ active: isActive(), disabled: disabled() }"></div>  <!-- объект | строка | массив -->
+<div [style.width.%]="ratingPercent()"></div>               <!-- единица в имени: px, %, em, rem -->
+<div [style.--accent]="accent()"></div>                      <!-- CSS-переменная -->
+<div [style]="{ 'max-width.px': 320, opacity: 0.8 }"></div>
+<div class="card" [class.card--new]="studio().isNew"></div>  <!-- статический class + привязка — можно -->
+
+<!-- ── События ── -->
+<button (click)="toggleFavorite()">♡</button>
+<input (input)="query.set($any($event.target).value)" />
+<input (keyup.enter)="search()" (keydown.shift.enter)="newLine()" (keydown.escape)="clear()" />
+<input (keydown.control.s)="save($event)" />                <!-- модификаторы: alt, control, meta, shift -->
+<form (submit)="$event.preventDefault(); save()"></form>
+
+<!-- ── Двусторонняя привязка ── -->
+<app-rating [(value)]="rating" />                            <!-- model() внутри; rating — сигнал -->
+<input [(ngModel)]="name" />                                <!-- FormsModule -->
+
+<!-- ── Ссылки на элементы и директивы ── -->
+<input #query type="search" (keyup.enter)="search(query.value)" />
+<app-studio-card #card="studioCard" />                       <!-- exportAs -->
+<form #f="ngForm"></form>
+
+<!-- ── @if ── -->
+@if (loading()) {
+    <app-spinner />
+} @else if (error(); as message) {                           <!-- as — сохранить результат выражения -->
+    <p role="alert">{{ message }}</p>
+} @else {
+    <app-studio-list [studios]="studios()" />
+}
+
+<!-- ── @for: track обязателен ── -->
+<ul>
+    @for (studio of studios(); track studio.id; let i = $index, first = $first, last = $last, even = $even, odd = $odd, count = $count) {
+        <li [class.even]="even">{{ i + 1 }} из {{ count }}: {{ studio.name }}</li>
+    } @empty {
+        <li>Ничего не найдено</li>
+    }
+</ul>
+<!-- track $index — только для статичных списков; track item — для примитивов -->
+
+<!-- ── @switch ── -->
+@switch (booking.status) {
+    @case ('CONFIRMED') { <span class="ok">Подтверждено</span> }
+    @case ('PENDING') { <span class="wait">Ожидает</span> }
+    @case ('CANCELED') { <span class="off">Отменено</span> }
+    @default never;                                          <!-- проверка полноты union-типа -->
+    <!-- или: @default { <span>Неизвестно</span> } -->
+}
+
+<!-- ── @let: локальная переменная шаблона ── -->
+@let total = booking.hours * booking.pricePerHour;
+@let user = user$ | async;
+<p>{{ total }} ₽ — {{ user?.name }}</p>
+
+<!-- ── @defer: ленивая загрузка части шаблона ── -->
+@defer (on viewport; prefetch on idle) {
+    <app-reviews [studioId]="studio().id" />
+} @placeholder (minimum 300ms) {
+    <div class="skeleton"></div>                              <!-- до запуска загрузки -->
+} @loading (after 100ms; minimum 500ms) {
+    <app-spinner />                                          <!-- пока грузится -->
+} @error {
+    <p>Не удалось загрузить отзывы</p>
+}
+<!-- триггеры: on idle | viewport | viewport(ref) | interaction | interaction(ref) | hover | immediate | timer(2s)
+     условие: when isReady()
+     SSR: hydrate on viewport | hydrate on interaction | hydrate when cond | hydrate never -->
+
+<!-- ── ng-template, ng-container, ngTemplateOutlet ── -->
+<ng-template #item let-studio let-i="index">
+    {{ i + 1 }}. {{ studio.name }}
+</ng-template>
+<ng-container *ngTemplateOutlet="item; context: { $implicit: studio(), index: 0 }" />
+<ng-container [ngTemplateOutlet]="custom() ?? item" [ngTemplateOutletContext]="{ $implicit: studio(), index: 0 }" />
+
+<!-- ── Проекция контента (в шаблоне компонента-обёртки) ── -->
+<header><ng-content select="[cardTitle]">Без названия</ng-content></header>  <!-- запасное содержимое -->
+<div><ng-content /></div>
+<footer><ng-content select="[cardActions], .actions, app-button" /></footer>
+<ng-container ngProjectAs="[cardActions]"><button>OK</button></ng-container>
+
+<!-- ── Pipes ── -->
+<p>{{ studio().createdAt | date: 'd MMMM y, HH:mm' }}</p>
+<p>{{ price() | currency: 'RUB' : 'symbol-narrow' : '1.0-0' }}</p>
+<p>{{ name() | uppercase | slice: 0 : 10 }}</p>               <!-- цепочка -->
+
+<!-- ── Анимации входа/выхода (нативные, без @angular/animations) ── -->
+@if (expanded()) {
+    <div animate.enter="fade-in" animate.leave="fade-out">Подробности</div>
+}
+
+<!-- ── Устаревшее: структурные директивы ── -->
+<!-- *ngIf="cond; else other"  *ngFor="let s of list; trackBy: fn"  [ngSwitch] / *ngSwitchCase
+     [ngClass]="{...}"  [ngStyle]="{...}" — заменены control flow и [class]/[style] -->
+</script>
+
+<script type="text/x-code" data-section="signals" data-title="Сигналы" data-path="signals.ts" data-lead="Реактивное состояние: signal, computed, effect, linkedSignal, untracked, асинхронные resource.">
+import { HttpClient } from '@angular/common/http';
+import {
+    type Signal,
+    type WritableSignal,
+    computed,
+    effect,
+    inject,
+    isSignal,
+    linkedSignal,
+    resource,
+    signal,
+    untracked,
+} from '@angular/core';
+import { httpResource } from '@angular/common/http';
+import { rxResource } from '@angular/core/rxjs-interop';
+
+// ── signal: изменяемое значение ──
+const count: WritableSignal<number> = signal(0);
+count(); // чтение — вызов функции
+count.set(5); // заменить
+count.update((value) => value + 1); // от предыдущего
+const readonlyCount: Signal<number> = count.asReadonly(); // отдать наружу только чтение
+
+// равенство: по умолчанию Object.is; своё сравнение — чтобы не будить зависимых зря
+const filters = signal({ city: 'Москва', page: 1 }, { equal: (a, b) => a.city === b.city && a.page === b.page });
+
+// иммутабельно: новый объект/массив, а не мутация
+const studios = signal<Studio[]>([]);
+studios.update((list) => [...list, newStudio]);
+studios.update((list) => list.map((s) => (s.id === id ? { ...s, favorite: true } : s)));
+
+// ── computed: производное, ленивое, кэшируемое ──
+const total = computed(() => studios().length);
+const openCount = computed(() => studios().filter((s) => s.isOpen).length);
+const title = computed(() => `${openCount()} из ${total()} открыты`);
+
+// ── effect: побочные действия (логи, localStorage, DOM вне Angular) ──
+// создавать в контексте внедрения: конструктор, поле класса, или передать { injector }
+effect((onCleanup) => {
+    localStorage.setItem('filters', JSON.stringify(filters()));
+    const timer = setTimeout(() => console.warn('фильтры', filters()), 300);
+    onCleanup(() => clearTimeout(timer)); // перед следующим запуском и при уничтожении
+});
+// НЕ используйте effect, чтобы копировать один сигнал в другой — для этого computed/linkedSignal
+
+// ── untracked: прочитать без подписки ──
+effect(() => {
+    const city = filters().city; // зависимость
+    const user = untracked(() => currentUser()); // не зависимость
+    analytics.track('city', { city, user });
+});
+
+// ── linkedSignal: зависит от источника, но можно менять вручную ──
+const options = signal(['Москва', 'Казань']);
+const selected = linkedSignal(() => options()[0]); // сбрасывается при смене options
+selected.set('Казань'); // можно поменять
+// полная форма: учитывает предыдущее значение
+const selectedKeep = linkedSignal<string[], string>({
+    source: options,
+    computation: (next, previous) => (previous && next.includes(previous.value) ? previous.value : next[0]),
+});
+
+isSignal(count); // true
+
+// ── resource: асинхронные данные на сигналах ──
+const studioId = signal('sound-garden');
+const studioRes = resource({
+    params: () => ({ id: studioId() }), // undefined → загрузка не стартует
+    loader: async ({ params, abortSignal }) => {
+        const response = await fetch(`/api/studios/${params.id}`, { signal: abortSignal });
+        return (await response.json()) as Studio;
+    },
+});
+studioRes.value(); // данные
+studioRes.isLoading(); // идёт загрузка
+studioRes.error(); // ошибка
+studioRes.hasValue(); // есть значение (сужает тип)
+studioRes.status(); // 'idle' | 'loading' | 'reloading' | 'resolved' | 'error' | 'local'
+studioRes.reload(); // перезапросить
+studioRes.set(localStudio); // локально заменить значение
+
+// ── httpResource: то же через HttpClient (интерцепторы работают) ──
+const studioHttp = httpResource<Studio>(() => `/api/studios/${studioId()}`);
+const listHttp = httpResource<Studio[]>(() => ({
+    url: '/api/studios',
+    params: { city: filters().city, page: filters().page },
+    headers: { 'X-Client': 'web' },
+}), { defaultValue: [] });
+// варианты: httpResource.text(...), httpResource.blob(...), httpResource.arrayBuffer(...)
+// опция parse: схема Zod → httpResource(() => url, { parse: StudioSchema.parse })
+
+// ── rxResource: загрузчик — Observable ──
+const http = inject(HttpClient);
+const reviews = rxResource({
+    params: () => studioId(),
+    stream: ({ params: id }) => http.get<Review[]>(`/api/studios/${id}/reviews`),
+});
+</script>
+
+<script type="text/x-code" data-section="directives" data-title="Директивы" data-path="tooltip.directive.ts · if-role.directive.ts" data-lead="Атрибутные директивы с host, hostDirectives и своя структурная директива на TemplateRef и ViewContainerRef.">
+import {
+    Directive,
+    ElementRef,
+    Renderer2,
+    TemplateRef,
+    ViewContainerRef,
+    booleanAttribute,
+    effect,
+    inject,
+    input,
+    output,
+    signal,
+} from '@angular/core';
+
+// ── Атрибутная директива ──
+@Directive({
+    selector: '[appTooltip]', // префикс app, camelCase
+    exportAs: 'tooltip', // <button appTooltip="…" #t="tooltip">
+    host: {
+        '[attr.aria-describedby]': 'visible() ? id : null',
+        '[class.has-tooltip]': 'true',
+        '(mouseenter)': 'show()',
+        '(mouseleave)': 'hide()',
+        '(focusin)': 'show()',
+        '(focusout)': 'hide()',
+        '(keydown.escape)': 'hide()',
+    },
+    providers: [], // свои провайдеры, как у компонента
+    hostDirectives: [], // композиция директив
+})
+export class TooltipDirective {
+    readonly text = input.required<string>({ alias: 'appTooltip' }); // appTooltip="Текст"
+    readonly disabled = input(false, { transform: booleanAttribute });
+    readonly shown = output<void>();
+
+    protected readonly visible = signal(false);
+    protected readonly id = `tooltip-${nextId++}`;
+
+    private readonly host = inject<ElementRef<HTMLElement>>(ElementRef).nativeElement;
+    private readonly renderer = inject(Renderer2); // безопасная работа с DOM (и на сервере)
+
+    show(): void {
+        if (this.disabled()) return;
+        this.visible.set(true);
+        this.shown.emit();
+    }
+
+    hide(): void {
+        this.visible.set(false);
+    }
+}
+let nextId = 0;
+
+// ── hostDirectives: встроить готовое поведение в компонент ──
+@Component({
+    selector: 'button[app-icon-button]',
+    template: '<ng-content />',
+    hostDirectives: [
+        { directive: TooltipDirective, inputs: ['appTooltip: label', 'disabled'], outputs: ['shown'] },
+        CdkDrag, // без проброса
+    ],
+})
+export class IconButtonComponent {
+    private readonly tooltip = inject(TooltipDirective); // встроенная директива доступна через inject
+}
+
+// ── Структурная директива: *appIfRole="'admin'; else denied" ──
+interface IfRoleContext {
+    $implicit: User; // let-user
+    appIfRole: string; // let-role="appIfRole"
+}
+
+@Directive({ selector: '[appIfRole]' })
+export class IfRoleDirective {
+    readonly appIfRole = input.required<string>();
+    readonly appIfRoleElse = input<TemplateRef<unknown> | null>(null); // ; else tpl
+
+    private readonly template = inject<TemplateRef<IfRoleContext>>(TemplateRef);
+    private readonly container = inject(ViewContainerRef);
+    private readonly auth = inject(AuthService);
+
+    constructor() {
+        effect(() => {
+            this.container.clear();
+            const user = this.auth.user();
+            if (user?.roles.includes(this.appIfRole())) {
+                this.container.createEmbeddedView(this.template, { $implicit: user, appIfRole: this.appIfRole() });
+            } else if (this.appIfRoleElse()) {
+                this.container.createEmbeddedView(this.appIfRoleElse()!);
+            }
+        });
+    }
+
+    // типизация контекста в шаблоне
+    static ngTemplateContextGuard(_dir: IfRoleDirective, ctx: unknown): ctx is IfRoleContext {
+        return true;
+    }
+}
+// <section *appIfRole="'admin'; else denied; let user">Привет, {{ user.name }}</section>
+// <ng-template #denied>Нет доступа</ng-template>
+
+// ── ViewContainerRef: динамические компоненты ──
+const ref = this.container.createComponent(AlertComponent, { injector, projectableNodes: [] });
+ref.setInput('message', 'Сохранено'); // вход по имени
+ref.instance.closed.subscribe(() => ref.destroy());
+</script>
+
+<script type="text/x-code" data-section="pipes" data-title="Pipes" data-path="plural.pipe.ts" data-lead="Все встроенные pipes с аргументами и свой pipe: чистый и нечистый.">
+// ── Встроенные (импорт из @angular/common) ──
+// {{ date | date: 'd MMMM y, HH:mm' : '+0300' : 'ru' }}     DatePipe: формат, часовой пояс, локаль
+//    форматы: 'short' 'medium' 'long' 'full' 'shortDate' 'mediumTime' 'yyyy-MM-dd' 'EEEE' 'LLLL'
+// {{ 1500 | currency: 'RUB' : 'symbol-narrow' : '1.0-0' }}  CurrencyPipe: код, вид (code|symbol|symbol-narrow|строка), digitsInfo
+// {{ 4.567 | number: '1.1-2' }}                              DecimalPipe: minInt.minFrac-maxFrac → 4,57
+// {{ 0.15 | percent: '1.0-1' }}                              PercentPipe → 15 %
+// {{ 'текст' | uppercase }} | lowercase | titlecase
+// {{ list | slice: 0 : 3 }}                                  SlicePipe: массив или строка
+// {{ obj | json }}                                           JsonPipe: отладка
+// @for (e of map | keyvalue; track e.key) {}                 KeyValuePipe: объект/Map → [{key, value}]
+// {{ user$ | async }}                                        AsyncPipe: Observable/Promise, сам отписывается
+// {{ n | i18nPlural: { '=0': 'нет', '=1': 'один', other: '#' } }}
+// {{ gender | i18nSelect: { male: 'он', female: 'она', other: 'они' } }}
+
+import { Pipe, type PipeTransform, inject, LOCALE_ID } from '@angular/core';
+
+export type PluralForms = readonly [one: string, few: string, many: string];
+
+// ── Чистый pipe (по умолчанию): пересчёт только при новой ссылке входа или аргумента ──
+@Pipe({
+    name: 'plural', // {{ hours | plural: ['час', 'часа', 'часов'] }}
+    pure: true, // по умолчанию; false — вызывается на каждой проверке (дорого)
+    // standalone: true — по умолчанию
+})
+export class PluralPipe implements PipeTransform {
+    private readonly rules = new Intl.PluralRules(inject(LOCALE_ID));
+
+    transform(count: number, [one, few, many]: PluralForms, withNumber = true): string {
+        const form = this.rules.select(count);
+        const word = form === 'one' ? one : form === 'few' ? few : many;
+        return withNumber ? `${count} ${word}` : word;
+    }
+}
+
+// Использование в компоненте: imports: [PluralPipe, DatePipe, CurrencyPipe]
+// В коде (не в шаблоне) pipe не нужен — вызывайте функцию: formatDate, formatCurrency, formatNumber из @angular/common
+</script>
+
+<script type="text/x-code" data-section="di" data-title="Внедрение зависимостей" data-path="studio.store.ts · tokens.ts" data-lead="inject, провайдеры всех видов, токены, опции поиска, контекст внедрения.">
+import {
+    EnvironmentInjector,
+    Injectable,
+    InjectionToken,
+    Injector,
+    type Provider,
+    type EnvironmentProviders,
+    createEnvironmentInjector,
+    forwardRef,
+    inject,
+    makeEnvironmentProviders,
+    runInInjectionContext,
+    signal,
+    computed,
+} from '@angular/core';
+
+// ── Сервис-синглтон ──
+@Injectable({ providedIn: 'root' }) // tree-shakable: не используется — не попадёт в бандл
+export class StudioStore {
+    private readonly http = inject(HttpClient);
+    private readonly _studios = signal<Studio[]>([]);
+    readonly studios = this._studios.asReadonly();
+    readonly count = computed(() => this._studios().length);
+}
+// providedIn: 'root' | 'platform' | 'any'(устарело) | null → нужен явный провайдер
+
+// ── Сервис без providedIn — свой экземпляр там, где указан в providers ──
+@Injectable()
+export class CardStore {}
+
+// ── Токены для значений, не-классов и интерфейсов ──
+export interface AppConfig { apiUrl: string; features: Record<string, boolean>; }
+export const APP_CONFIG = new InjectionToken<AppConfig>('APP_CONFIG');
+// токен с фабрикой по умолчанию — провайдер не нужен
+export const WINDOW = new InjectionToken<Window>('WINDOW', { providedIn: 'root', factory: () => window });
+export const VALIDATORS = new InjectionToken<Validator[]>('VALIDATORS');
+
+// ── Все виды провайдеров ──
+const providers: Provider[] = [
+    StudioStore, // = { provide: StudioStore, useClass: StudioStore }
+    { provide: StudioStore, useClass: MockStudioStore }, // подменить реализацию
+    { provide: APP_CONFIG, useValue: { apiUrl: '/api', features: {} } }, // готовое значение
+    { provide: Logger, useFactory: () => (inject(APP_CONFIG).features['debug'] ? new ConsoleLogger() : new NoopLogger()) },
+    { provide: OldLogger, useExisting: Logger }, // псевдоним: тот же экземпляр
+    { provide: VALIDATORS, useValue: emailValidator, multi: true }, // несколько значений в массиве
+    { provide: VALIDATORS, useValue: phoneValidator, multi: true },
+    { provide: Parent, useExisting: forwardRef(() => ChildComponent) }, // класс объявлен ниже
+];
+
+// ── inject() и его опции ──
+class Example {
+    store = inject(StudioStore);
+    config = inject(APP_CONFIG);
+    logger = inject(Logger, { optional: true }); // null вместо ошибки
+    own = inject(CardStore, { self: true }); // только в своём инжекторе
+    parent = inject(CardStore, { skipSelf: true }); // начиная с родителя
+    host = inject(CardStore, { host: true }); // не выше хост-компонента
+    validators = inject(VALIDATORS); // массив из multi-провайдеров
+    injector = inject(Injector);
+}
+// inject() работает только в контексте внедрения: поле класса, конструктор, фабрика провайдера,
+// guards/resolvers/interceptors, provideAppInitializer, runInInjectionContext
+
+// ── Выполнить код в контексте внедрения позже ──
+class Later {
+    private readonly injector = inject(Injector);
+    onClick(): void {
+        runInInjectionContext(this.injector, () => {
+            const store = inject(StudioStore);
+        });
+        // или: effect(() => {...}, { injector: this.injector }); toSignal(obs$, { injector })
+    }
+}
+
+// ── Свои provide-функции (как provideRouter) ──
+export function provideStudios(config: AppConfig): EnvironmentProviders {
+    return makeEnvironmentProviders([{ provide: APP_CONFIG, useValue: config }, StudioStore]);
+}
+// в app.config: providers: [provideStudios({ apiUrl: '/api', features: {} })]
+// или на маршруте: { path: 'studios', providers: [provideStudios(...)], loadChildren: ... }
+
+// ── Где искать: компонент (providers/viewProviders) → родители → маршрут → корень (root) → platform ──
+</script>
+
+<script type="text/x-code" data-section="lifecycle" data-title="Жизненный цикл и рендер" data-path="lifecycle.ts" data-lead="Порядок хуков, DestroyRef, рендер-хуки и change detection в zoneless.">
+// ── Порядок ──
+// constructor           inject(), поля; входы ещё НЕ установлены
+// ngOnChanges           изменились @Input (новая ссылка); первый раз — до ngOnInit
+// ngOnInit              входы получены
+// ngDoCheck             каждая проверка
+// ngAfterContentInit    готов ng-content (один раз)
+// ngAfterContentChecked после каждой проверки контента
+// ngAfterViewInit       готов свой шаблон и дети (один раз)
+// ngAfterViewChecked    после каждой проверки шаблона
+// ngOnDestroy           перед удалением
+// Родитель: OnInit → дети OnInit → … → дети AfterViewInit → родитель AfterViewInit
+
+import {
+    ChangeDetectorRef,
+    DestroyRef,
+    afterEveryRender,
+    afterNextRender,
+    inject,
+} from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+
+export class ClockComponent {
+    protected now = new Date();
+
+    constructor() {
+        const cdr = inject(ChangeDetectorRef);
+        const destroyRef = inject(DestroyRef);
+
+        // DestroyRef: очистка рядом с подпиской
+        const timer = setInterval(() => {
+            this.now = new Date();
+            cdr.markForCheck(); // в zoneless таймер сам проверку не запускает (для signal не нужно)
+        }, 1000);
+        destroyRef.onDestroy(() => clearInterval(timer));
+        destroyRef.destroyed; // true, если уже уничтожен
+
+        // RxJS: отписка при уничтожении
+        interval(1000).pipe(takeUntilDestroyed()).subscribe(); // в контексте внедрения
+        // вне контекста: takeUntilDestroyed(destroyRef)
+
+        // Рендер-хуки: после обновления DOM, ТОЛЬКО в браузере
+        afterNextRender(() => this.chart.init()); // один раз
+        afterEveryRender(() => this.syncScroll()); // после каждого рендера
+        // с фазами, чтобы не вызывать лишний layout:
+        afterNextRender({
+            earlyRead: () => this.el.getBoundingClientRect().height, // чтение до записи
+            write: (height) => this.el.style.setProperty('--h', `${height}px`),
+            read: () => this.el.scrollHeight, // чтение после записи
+        });
+    }
+}
+
+// ── Change detection ──
+// OnPush + zoneless: компонент перерисуется, если
+//   1) изменился сигнал, прочитанный в шаблоне;
+//   2) пришла новая ссылка во вход;
+//   3) событие из шаблона или host (click, input…);
+//   4) вызван markForCheck() / AsyncPipe получил значение.
+// ChangeDetectorRef: markForCheck() — пометить; detectChanges() — проверить сейчас;
+// detach()/reattach() — выключить автоматическую проверку (редко).
+</script>
+
+<script type="text/x-code" data-section="router" data-title="Роутинг" data-path="app.routes.ts" data-lead="Все поля маршрута, ленивая загрузка, функциональные guards и resolvers, навигация, параметры как входы.">
+import { inject } from '@angular/core';
+import {
+    ActivatedRoute,
+    type CanActivateFn,
+    type CanDeactivateFn,
+    type CanMatchFn,
+    type ResolveFn,
+    RedirectCommand,
+    Router,
+    RouterLink,
+    RouterLinkActive,
+    RouterOutlet,
+    type Routes,
+    type UrlTree,
+} from '@angular/router';
+
+export const routes: Routes = [
+    { path: '', component: HomePageComponent, title: 'StudioSlot', pathMatch: 'full' },
+    { path: 'old-catalog', redirectTo: 'studios', pathMatch: 'full' },
+    { path: 'studio/:id', redirectTo: ({ params }) => `/studios/${params['id']}` }, // redirect-функция
+
+    {
+        path: 'studios',
+        loadComponent: () => import('@pages/catalog').then((m) => m.CatalogPageComponent), // ленивый компонент
+        title: 'Каталог студий',
+        data: { breadcrumb: 'Студии' }, // статические данные
+    },
+    {
+        path: 'studios/:id', // параметр
+        loadComponent: () => import('@pages/studio'), // export default — без .then
+        resolve: { studio: studioResolver }, // данные до активации
+        title: studioTitleResolver, // заголовок вкладки из функции
+        runGuardsAndResolvers: 'paramsChange', // когда перезапускать: always | paramsOrQueryParamsChange | …
+    },
+    {
+        path: 'admin',
+        canMatch: [adminMatchGuard], // не совпало — роутер ищет дальше (и не грузит чанк)
+        canActivate: [authGuard], // можно ли войти
+        canActivateChild: [authGuard], // для детей
+        providers: [AdminStore], // провайдеры только для этой ветки
+        loadChildren: () => import('@pages/admin/admin.routes').then((m) => m.ADMIN_ROUTES), // ленивые маршруты
+    },
+    {
+        path: 'booking/:id',
+        component: BookingPageComponent,
+        canDeactivate: [unsavedChangesGuard], // можно ли уйти
+        children: [
+            { path: '', redirectTo: 'details', pathMatch: 'full' },
+            { path: 'details', component: BookingDetailsComponent },
+            { path: 'chat', component: ChatComponent, outlet: 'side' }, // именованный outlet
+        ],
+    },
+    { path: '**', loadComponent: () => import('@pages/not-found') }, // 404 — последним
+];
+
+// ── Функциональные guards и resolvers ──
+export const authGuard: CanActivateFn = (route, state) => {
+    const auth = inject(AuthService);
+    return auth.isLoggedIn() ? true : inject(Router).createUrlTree(['/login'], { queryParams: { returnUrl: state.url } });
+    // можно вернуть: boolean | UrlTree | RedirectCommand | Observable/Promise этих значений
+};
+
+export const adminMatchGuard: CanMatchFn = (route, segments) => inject(AuthService).hasRole('admin');
+
+export const unsavedChangesGuard: CanDeactivateFn<BookingPageComponent> = (component) =>
+    component.hasChanges() ? confirmLeave() : true;
+
+export const studioResolver: ResolveFn<Studio> = (route) => {
+    const id = route.paramMap.get('id')!;
+    return inject(StudioApi).getById(id); // Observable | Promise | значение
+};
+
+export const studioTitleResolver: ResolveFn<string> = (route) => `Студия ${route.paramMap.get('id')}`;
+
+// перенаправление с опциями навигации
+export const legacyGuard: CanActivateFn = () =>
+    new RedirectCommand(inject(Router).parseUrl('/studios'), { replaceUrl: true });
+
+// ── Компонент страницы: параметры приходят во входы (withComponentInputBinding) ──
+@Component({ imports: [RouterLink, RouterLinkActive, RouterOutlet], templateUrl: './studio-page.html' })
+export class StudioPageComponent {
+    readonly id = input.required<string>(); // :id из пути
+    readonly tab = input<string>(); // ?tab=reviews из query
+    readonly studio = input.required<Studio>(); // из resolve
+    readonly breadcrumb = input<string>(); // из data
+
+    private readonly router = inject(Router);
+    private readonly route = inject(ActivatedRoute); // классический способ
+
+    // классика: this.route.paramMap / queryParamMap / data / fragment — Observable
+    //           this.route.snapshot.paramMap.get('id') — один раз
+
+    goToBooking(): void {
+        this.router.navigate(['/booking', this.id()], { queryParams: { from: 'card' }, fragment: 'top' });
+        this.router.navigate(['details'], { relativeTo: this.route }); // относительно текущего
+        this.router.navigateByUrl('/studios?city=moscow', { replaceUrl: true });
+    }
+}
+
+/* ── Шаблон ──
+<a routerLink="/studios">Каталог</a>
+<a [routerLink]="['/studios', studio.id]" [queryParams]="{ tab: 'reviews' }" fragment="top"
+   queryParamsHandling="merge" [state]="{ from: 'list' }" [replaceUrl]="true">Открыть</a>
+<a routerLink="/studios" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }"
+   ariaCurrentWhenActive="page">Студии</a>
+<router-outlet />
+<router-outlet name="side" />
+<a [routerLink]="[{ outlets: { side: ['chat'] } }]">Чат</a>
+*/
+
+// ── События роутера ──
+// inject(Router).events.pipe(filter((e) => e instanceof NavigationEnd)).subscribe(...)
+// NavigationStart | NavigationEnd | NavigationCancel | NavigationError | ResolveStart | ResolveEnd | …
+</script>
+
+<script type="text/x-code" data-section="reactive-forms" data-title="Reactive Forms" data-path="booking-form.component.ts" data-lead="Типизированные формы: FormGroup, FormControl, FormArray, FormRecord, все валидаторы, события, свой ControlValueAccessor.">
+import { Component, forwardRef, inject } from '@angular/core';
+import { toSignal } from '@angular/core/rxjs-interop';
+import {
+    type AbstractControl,
+    type AsyncValidatorFn,
+    type ControlValueAccessor,
+    FormArray,
+    FormControl,
+    FormGroup,
+    FormRecord,
+    FormSubmittedEvent,
+    NG_VALUE_ACCESSOR,
+    NonNullableFormBuilder,
+    ReactiveFormsModule,
+    StatusChangeEvent,
+    TouchedChangeEvent,
+    type ValidationErrors,
+    type ValidatorFn,
+    Validators,
+    ValueChangeEvent,
+} from '@angular/forms';
+import { map, of, delay } from 'rxjs';
+
+@Component({
+    selector: 'app-booking-form',
+    imports: [ReactiveFormsModule],
+    templateUrl: './booking-form.component.html',
+})
+export class BookingFormComponent {
+    private readonly fb = inject(NonNullableFormBuilder); // все контролы non-nullable: reset() вернёт начальное
+
+    // ── Группа через FormBuilder ──
+    readonly form = this.fb.group(
+        {
+            name: ['', [Validators.required, Validators.minLength(2), Validators.maxLength(50)]],
+            email: ['', { validators: [Validators.required, Validators.email], asyncValidators: [emailTakenValidator()], updateOn: 'blur' }],
+            phone: ['', Validators.pattern(/^\+7\d{10}$/)],
+            hours: [2, [Validators.required, Validators.min(1), Validators.max(12)]],
+            agree: [false, Validators.requiredTrue],
+            date: this.fb.control<string | null>(null), // явный тип
+            address: this.fb.group({ city: ['Москва'], street: [''] }), // вложенная группа
+            guests: this.fb.array([this.fb.control('')]), // динамический список
+        },
+        { validators: [dateRangeValidator] }, // валидатор всей группы
+    );
+
+    // ── То же без builder ──
+    readonly manual = new FormGroup({
+        name: new FormControl('', { nonNullable: true, validators: [Validators.required] }),
+        comment: new FormControl<string | null>(null),
+        disabledField: new FormControl({ value: 'нельзя менять', disabled: true }),
+    });
+
+    // FormRecord — динамические ключи одного типа
+    readonly extras = new FormRecord<FormControl<boolean>>({});
+
+    // ── Чтение состояния ──
+    readonly value = toSignal(this.form.valueChanges, { initialValue: this.form.getRawValue() });
+    readonly status = toSignal(this.form.statusChanges); // 'VALID' | 'INVALID' | 'PENDING' | 'DISABLED'
+
+    get guests(): FormArray<FormControl<string>> {
+        return this.form.controls.guests;
+    }
+
+    constructor() {
+        // единый поток событий формы
+        this.form.events.subscribe((event) => {
+            if (event instanceof ValueChangeEvent) console.log('значение', event.value);
+            if (event instanceof StatusChangeEvent) console.log('статус', event.status);
+            if (event instanceof TouchedChangeEvent) console.log('touched', event.touched);
+            if (event instanceof FormSubmittedEvent) console.log('отправлена');
+            // также PristineChangeEvent, FormResetEvent
+        });
+
+        this.form.controls.email.valueChanges.pipe(map((v) => v.trim())).subscribe();
+    }
+
+    // ── Операции ──
+    addGuest(): void { this.guests.push(this.fb.control('')); }
+    removeGuest(i: number): void { this.guests.removeAt(i); }
+
+    examples(): void {
+        const f = this.form;
+        f.value; // без disabled-полей
+        f.getRawValue(); // со всеми полями
+        f.controls.name.value; // типизировано: string
+        f.get('address.city')?.value; // по пути
+        f.setValue({ ...f.getRawValue() }); // все поля обязательно
+        f.patchValue({ name: 'Евгений' }); // часть полей
+        f.reset(); // к начальным значениям (nonNullable)
+        f.reset({ hours: 3 });
+        f.controls.phone.disable(); // f.enable()
+        f.controls.phone.setValidators([Validators.required]); // addValidators / removeValidators / clearValidators
+        f.controls.phone.updateValueAndValidity();
+        f.patchValue({ name: 'x' }, { emitEvent: false }); // без valueChanges
+        f.markAllAsTouched(); // показать все ошибки
+        f.markAsPristine(); f.markAsDirty(); f.markAsUntouched();
+        f.valid; f.invalid; f.pending; f.disabled; f.dirty; f.pristine; f.touched; f.untouched;
+        f.errors; f.controls.email.errors?.['email']; f.hasError('required', 'name');
+        f.controls.name.setErrors({ server: 'Имя занято' });
+        this.extras.addControl('parking', new FormControl(false, { nonNullable: true })); // removeControl / setControl / contains
+    }
+
+    submit(): void {
+        if (this.form.invalid) {
+            this.form.markAllAsTouched();
+            return;
+        }
+        const data = this.form.getRawValue();
+    }
+}
+
+// ── Свои валидаторы ──
+export const dateRangeValidator: ValidatorFn = (group: AbstractControl): ValidationErrors | null => {
+    const hours = group.get('hours')?.value as number;
+    return hours > 8 ? { tooLong: { max: 8, actual: hours } } : null;
+};
+
+export function emailTakenValidator(): AsyncValidatorFn {
+    return (control) => of(control.value === 'busy@mail.ru').pipe(delay(300), map((taken) => (taken ? { emailTaken: true } : null)));
+}
+// Встроенные: required, requiredTrue, email, min, max, minLength, maxLength, pattern, nullValidator, compose, composeAsync
+
+/* ── Шаблон ──
+<form [formGroup]="form" (ngSubmit)="submit()">
+    <input formControlName="name" />
+    @if (form.controls.name.touched && form.controls.name.hasError('required')) { <small>Обязательно</small> }
+    <div formGroupName="address"><input formControlName="city" /></div>
+    <div formArrayName="guests">
+        @for (guest of guests.controls; track $index) { <input [formControlName]="$index" /> }
+    </div>
+    <input [formControl]="standaloneControl" />                <!-- отдельный контрол без группы -->
+    <button type="submit" [disabled]="form.pending">Отправить</button>
+</form>
+Классы на полях: ng-valid ng-invalid ng-pending ng-pristine ng-dirty ng-touched ng-untouched ng-submitted
+*/
+
+// ── Свой контрол формы: ControlValueAccessor ──
+@Component({
+    selector: 'app-rating-input',
+    template: `@for (star of [1, 2, 3, 4, 5]; track star) {
+        <button type="button" [disabled]="disabled" (click)="pick(star)">{{ star <= value ? '★' : '☆' }}</button>
+    }`,
+    providers: [{ provide: NG_VALUE_ACCESSOR, useExisting: forwardRef(() => RatingInputComponent), multi: true }],
+})
+export class RatingInputComponent implements ControlValueAccessor {
+    protected value = 0;
+    protected disabled = false;
+    private onChange: (value: number) => void = () => {};
+    private onTouched: () => void = () => {};
+
+    writeValue(value: number | null): void { this.value = value ?? 0; } // форма → компонент
+    registerOnChange(fn: (value: number) => void): void { this.onChange = fn; } // компонент → форма
+    registerOnTouched(fn: () => void): void { this.onTouched = fn; }
+    setDisabledState(isDisabled: boolean): void { this.disabled = isDisabled; }
+
+    protected pick(star: number): void {
+        this.value = star;
+        this.onChange(star);
+        this.onTouched();
+    }
+}
+</script>
+
+<script type="text/x-code" data-section="template-forms" data-title="Template-driven формы" data-path="login.component.html" data-lead="Формы на ngModel: простые случаи без класса формы.">
+<!-- imports: [FormsModule] -->
+<form #form="ngForm" (ngSubmit)="login(form.value)" novalidate>
+    <input
+        name="email"
+        type="email"
+        [(ngModel)]="email"
+        #emailModel="ngModel"
+        required
+        email
+        [ngModelOptions]="{ updateOn: 'blur' }"
+    />
+    @if (emailModel.invalid && emailModel.touched) {
+        @if (emailModel.errors?.['required']) { <small>Введите почту</small> }
+        @if (emailModel.errors?.['email']) { <small>Неверный формат</small> }
+    }
+
+    <input name="password" type="password" [(ngModel)]="password" required minlength="8" maxlength="64" />
+    <input name="age" type="number" ngModel min="18" max="99" />
+    <input name="code" ngModel pattern="[0-9]{6}" />
+    <input type="checkbox" name="agree" ngModel required />
+
+    <fieldset ngModelGroup="address">                        <!-- вложенный объект в form.value -->
+        <input name="city" ngModel />
+    </fieldset>
+
+    <select name="city" [(ngModel)]="city">
+        @for (c of cities; track c.id) { <option [ngValue]="c">{{ c.name }}</option> }
+    </select>
+
+    <input [(ngModel)]="search" [ngModelOptions]="{ standalone: true }" />  <!-- вне формы -->
+
+    <button type="submit" [disabled]="form.invalid">Войти</button>
+    <button type="button" (click)="form.resetForm()">Сбросить</button>
+</form>
+<!-- form.value  form.valid  form.submitted  form.controls['email']  form.form — FormGroup внутри -->
+</script>
+
+<script type="text/x-code" data-section="signal-forms" data-title="Signal Forms" data-path="register.component.ts" data-lead="Новые формы на сигналах из @angular/forms/signals. Экспериментальные: имена функций и директив менялись между версиями — перед использованием сверяйтесь с angular.dev." data-exp="1">
+import { Component, signal } from '@angular/core';
+import {
+    FormField, // директива привязки поля; в ранних версиях называлась Field и [field]
+    apply,
+    applyEach,
+    disabled,
+    email,
+    form,
+    hidden,
+    maxLength,
+    minLength,
+    pattern,
+    readonly,
+    required,
+    schema,
+    submit,
+    validate,
+    validateAsync,
+} from '@angular/forms/signals';
+
+interface Registration {
+    name: string;
+    email: string;
+    password: string;
+    confirm: string;
+    phone: string;
+    guests: { name: string }[];
+    company: string;
+    isCompany: boolean;
+}
+
+// переиспользуемая схема для вложенных объектов и элементов массива
+const guestSchema = schema<{ name: string }>((path) => {
+    required(path.name, { message: 'Имя гостя' });
+});
+
+@Component({
+    selector: 'app-register',
+    imports: [FormField],
+    templateUrl: './register.component.html',
+})
+export class RegisterComponent {
+    // 1. Модель — обычный сигнал: источник правды
+    readonly model = signal<Registration>({
+        name: '', email: '', password: '', confirm: '', phone: '', guests: [], company: '', isCompany: false,
+    });
+
+    // 2. Форма поверх модели + правила
+    readonly regForm = form(this.model, (path) => {
+        required(path.name, { message: 'Введите имя' });
+        maxLength(path.name, 50);
+        required(path.email);
+        email(path.email, { message: 'Неверная почта' });
+        minLength(path.password, 8);
+        pattern(path.phone, /^\+7\d{10}$/);
+        validate(path.confirm, ({ value, valueOf }) =>
+            value() === valueOf(path.password) ? null : { kind: 'mismatch', message: 'Пароли не совпадают' },
+        );
+        disabled(path.company, ({ valueOf }) => !valueOf(path.isCompany)); // условно выключено
+        hidden(path.company, ({ valueOf }) => !valueOf(path.isCompany)); // условно скрыто
+        readonly(path.email, () => false);
+        applyEach(path.guests, guestSchema); // правила для каждого элемента массива
+        // apply(path.address, addressSchema) — для вложенного объекта
+        // validateAsync(...) / validateHttp(...) — асинхронная проверка
+    });
+
+    // 3. Состояние поля — сигналы
+    examples(): void {
+        const f = this.regForm.email();
+        f.value(); // значение (WritableSignal: f.value.set('x'))
+        f.valid(); f.invalid(); f.pending();
+        f.errors(); // [{ kind: 'email', message: '…' }]
+        f.touched(); f.dirty(); f.disabled(); f.hidden(); f.readonly();
+        this.regForm().valid(); // вся форма
+    }
+
+    // 4. Отправка: помечает всё touched, ждёт валидности, принимает ошибки сервера
+    save(): void {
+        submit(this.regForm, async (f) => {
+            const result = await api.register(f().value());
+            return result.ok ? undefined : [{ field: f.email, kind: 'server', message: 'Почта занята' }];
+        });
+    }
+}
+
+/* register.component.html
+<form (submit)="$event.preventDefault(); save()">
+    <input [formField]="regForm.name" />
+    @for (error of regForm.name().errors(); track error.kind) { <small>{{ error.message }}</small> }
+    <input type="email" [formField]="regForm.email" />
+    <input type="checkbox" [formField]="regForm.isCompany" />
+    @if (!regForm.company().hidden()) { <input [formField]="regForm.company" /> }
+    @for (guest of regForm.guests; track $index) { <input [formField]="guest.name" /> }
+    <button type="submit" [disabled]="regForm().invalid()">Зарегистрироваться</button>
+</form>
+*/
+</script>
+
+<script type="text/x-code" data-section="http" data-title="HTTP" data-path="studio.api.ts · auth.interceptor.ts" data-lead="HttpClient со всеми опциями запроса, функциональные интерсепторы, контекст запроса, обработка ошибок.">
+import {
+    HttpClient,
+    HttpContext,
+    HttpContextToken,
+    HttpErrorResponse,
+    HttpEventType,
+    HttpHeaders,
+    type HttpInterceptorFn,
+    HttpParams,
+    HttpResponse,
+    provideHttpClient,
+    withFetch,
+    withInterceptors,
+    withXsrfConfiguration,
+} from '@angular/common/http';
+import { Injectable, inject } from '@angular/core';
+import { catchError, finalize, retry, throwError, timeout } from 'rxjs';
+
+// app.config: provideHttpClient(withFetch(), withInterceptors([authInterceptor, errorInterceptor]),
+//             withXsrfConfiguration({ cookieName: 'XSRF-TOKEN', headerName: 'X-XSRF-TOKEN' }))
+
+export const SKIP_AUTH = new HttpContextToken<boolean>(() => false); // флаг на конкретный запрос
+
+@Injectable({ providedIn: 'root' })
+export class StudioApi {
+    private readonly http = inject(HttpClient);
+    private readonly base = '/api/studios';
+
+    list(city: string, page = 1) {
+        const params = new HttpParams().set('city', city).set('page', page); // .append .delete .has
+        return this.http.get<Studio[]>(this.base, { params }); // или params: { city, page }
+    }
+
+    getById(id: string) {
+        return this.http.get<Studio>(`${this.base}/${id}`);
+    }
+
+    create(body: NewStudio) {
+        return this.http.post<Studio>(this.base, body);
+    }
+
+    update(id: string, patch: Partial<Studio>) {
+        return this.http.patch<Studio>(`${this.base}/${id}`, patch); // put — замена целиком
+    }
+
+    remove(id: string) {
+        return this.http.delete<void>(`${this.base}/${id}`);
+    }
+
+    // все опции запроса
+    full(id: string) {
+        return this.http.get<Studio>(`${this.base}/${id}`, {
+            headers: new HttpHeaders({ 'X-Client': 'web' }), // или объект
+            params: { expand: 'reviews' },
+            observe: 'response', // 'body' (по умолч.) | 'response' (HttpResponse со статусом и заголовками) | 'events'
+            responseType: 'json', // 'json' | 'text' | 'blob' | 'arraybuffer'
+            withCredentials: true, // отправлять cookie
+            context: new HttpContext().set(SKIP_AUTH, true),
+            reportProgress: false, // события прогресса (для загрузки файлов, с observe: 'events')
+            transferCache: true, // SSR: переиспользовать ответ сервера в браузере
+            // с withFetch() доступны и опции fetch: keepalive, priority, cache, mode, redirect — сверяйтесь с версией
+        });
+    }
+
+    upload(file: File) {
+        const data = new FormData();
+        data.append('file', file);
+        return this.http.post('/api/upload', data, { reportProgress: true, observe: 'events' });
+        // event.type === HttpEventType.UploadProgress → event.loaded / event.total
+    }
+
+    withErrors(id: string) {
+        return this.getById(id).pipe(
+            timeout(10_000),
+            retry({ count: 2, delay: 500 }),
+            catchError((error: HttpErrorResponse) => {
+                if (error.status === 404) return throwError(() => new Error('Студия не найдена'));
+                return throwError(() => error);
+            }),
+            finalize(() => console.log('готово')),
+        );
+    }
+}
+
+// ── Функциональные интерсепторы ──
+export const authInterceptor: HttpInterceptorFn = (req, next) => {
+    if (req.context.get(SKIP_AUTH)) return next(req);
+    const token = inject(AuthService).token();
+    const authReq = req.clone({ setHeaders: { Authorization: `Bearer ${token}` }, withCredentials: true });
+    return next(authReq);
+};
+
+export const errorInterceptor: HttpInterceptorFn = (req, next) => {
+    const router = inject(Router);
+    return next(req).pipe(
+        catchError((error: HttpErrorResponse) => {
+            if (error.status === 401) router.navigate(['/login']);
+            return throwError(() => error);
+        }),
+    );
+};
+// req.clone({ url, method, body, headers, params, setHeaders, setParams, context })
+// Классовые интерсепторы (HttpInterceptor + HTTP_INTERCEPTORS) — устаревший стиль: withInterceptorsFromDi()
+</script>
+
+<script type="text/x-code" data-section="rxjs" data-title="RxJS и сигналы" data-path="rxjs-interop.ts" data-lead="Мост между Observable и сигналами и операторы, которые нужны чаще всего.">
+import { DestroyRef, inject, signal } from '@angular/core';
+import { outputToObservable, takeUntilDestroyed, toObservable, toSignal } from '@angular/core/rxjs-interop';
+import {
+    BehaviorSubject, Subject, combineLatest, debounceTime, distinctUntilChanged, filter, forkJoin, map,
+    merge, of, shareReplay, startWith, switchMap, tap, catchError, EMPTY, exhaustMap, concatMap, mergeMap,
+} from 'rxjs';
+
+// ── Observable → Signal ──
+const user = toSignal(user$); // Signal<User | undefined>
+const users = toSignal(users$, { initialValue: [] }); // без undefined
+const now = toSignal(clock$, { requireSync: true }); // Observable обязан выдать значение сразу (BehaviorSubject)
+// подписка живёт, пока жив контекст; ошибка из потока бросится при чтении сигнала
+
+// ── Signal → Observable ──
+const query = signal('');
+const results = toSignal(
+    toObservable(query).pipe(
+        debounceTime(300), // ждать паузу ввода
+        map((q) => q.trim()),
+        distinctUntilChanged(), // не повторять одинаковые
+        filter((q) => q.length >= 2),
+        switchMap((q) => api.search(q).pipe(catchError(() => of([])))), // отменить предыдущий запрос
+    ),
+    { initialValue: [] },
+);
+
+// ── Отписка ──
+stream$.pipe(takeUntilDestroyed()).subscribe(); // в контексте внедрения
+stream$.pipe(takeUntilDestroyed(inject(DestroyRef))).subscribe(); // вне его — передать DestroyRef
+
+// output() → Observable (для тестов и старого кода)
+outputToObservable(component.select).subscribe();
+
+// ── Операторы высшего порядка: какой выбрать ──
+// switchMap  — последний важен, прошлые отменить   (поиск, навигация)
+// concatMap  — по очереди, ничего не терять         (последовательное сохранение)
+// mergeMap   — параллельно                          (независимые загрузки)
+// exhaustMap — игнорировать, пока идёт текущий      (кнопка «Оплатить», логин)
+
+// ── Комбинации ──
+combineLatest([city$, page$]).pipe(map(([city, page]) => ({ city, page }))); // каждое изменение любого
+forkJoin({ studio: api.getById(id), reviews: api.reviews(id) }); // дождаться всех (завершающихся)
+merge(click$, key$); // один поток из нескольких
+user$.pipe(shareReplay({ bufferSize: 1, refCount: true })); // один запрос на всех подписчиков
+
+// ── Subjects ──
+const refresh$ = new Subject<void>(); // событие без начального значения
+const state$ = new BehaviorSubject<State>(initial); // хранит текущее; state$.value
+// в новом коде состояние — signal; Subject — для потоков событий
+</script>
+
+<script type="text/x-code" data-section="ssr" data-title="SSR и гидрация" data-path="app.config.server.ts · app.routes.server.ts" data-lead="Серверный рендер, пререндер, режимы по маршрутам, гидрация, код только для браузера.">
+// ── app.config.server.ts ──
+import { mergeApplicationConfig, type ApplicationConfig } from '@angular/core';
+import { provideServerRendering, withRoutes } from '@angular/ssr';
+
+const serverConfig: ApplicationConfig = {
+    providers: [provideServerRendering(withRoutes(serverRoutes))],
+};
+export const config = mergeApplicationConfig(appConfig, serverConfig);
+
+// ── app.routes.server.ts: режим рендера для каждого маршрута ──
+import { PrerenderFallback, RenderMode, type ServerRoute } from '@angular/ssr';
+
+export const serverRoutes: ServerRoute[] = [
+    { path: '', renderMode: RenderMode.Prerender }, // HTML при сборке
+    {
+        path: 'studios/:id',
+        renderMode: RenderMode.Prerender,
+        async getPrerenderParams() {
+            const ids = await inject(StudioApi).allIds(); // какие страницы пререндерить
+            return ids.map((id) => ({ id }));
+        },
+        fallback: PrerenderFallback.Server, // для остальных id: Server | Client | None
+    },
+    { path: 'auth/callback', renderMode: RenderMode.Client }, // только в браузере
+    { path: 'admin/**', renderMode: RenderMode.Client },
+    { path: 'old', renderMode: RenderMode.Server, status: 301, headers: { Location: '/studios' } },
+    { path: '**', renderMode: RenderMode.Server }, // на каждый запрос
+];
+
+// ── Гидрация (app.config.ts) ──
+// provideClientHydration(
+//     withEventReplay(),          // клики до гидрации не теряются
+//     withIncrementalHydration(), // @defer (hydrate on viewport) — гидрировать по частям
+//     withHttpTransferCacheOptions({ includePostRequests: false }), // переиспользовать ответы сервера
+//     withI18nSupport(),
+// )
+// Пропустить гидрацию компонента: <app-chart ngSkipHydration /> (или host: { ngSkipHydration: 'true' })
+
+// ── Код только для браузера ──
+import { DOCUMENT, isPlatformBrowser, isPlatformServer } from '@angular/common';
+import { PLATFORM_ID, REQUEST, REQUEST_CONTEXT, RESPONSE_INIT, TransferState, afterNextRender, inject, makeStateKey } from '@angular/core';
+
+export class SsrSafeComponent {
+    private readonly isBrowser = isPlatformBrowser(inject(PLATFORM_ID));
+    private readonly document = inject(DOCUMENT); // вместо глобального document
+    private readonly request = inject(REQUEST, { optional: true }); // запрос на сервере (null в браузере)
+    private readonly responseInit = inject(RESPONSE_INIT, { optional: true }); // статус/заголовки ответа
+
+    constructor() {
+        afterNextRender(() => {
+            localStorage.getItem('theme'); // window, localStorage, размеры — только здесь или под isBrowser
+        });
+        if (this.responseInit) this.responseInit.status = 404; // страница «не найдено» с правильным кодом
+    }
+}
+
+// ── TransferState: передать данные с сервера в браузер вручную ──
+const STUDIOS_KEY = makeStateKey<Studio[]>('studios');
+const state = inject(TransferState);
+if (state.hasKey(STUDIOS_KEY)) {
+    const cached = state.get(STUDIOS_KEY, []);
+    state.remove(STUDIOS_KEY);
+} else {
+    state.set(STUDIOS_KEY, loaded);
+}
+// HttpClient делает это сам (transfer cache) — вручную нужно для не-HTTP данных
+</script>
+
+<script type="text/x-code" data-section="testing" data-title="Тесты" data-path="studio-card.component.spec.ts" data-lead="TestBed, входы и выходы, сервисы, HTTP, роутер, таймеры. Раннер — Vitest.">
+import { provideHttpClient } from '@angular/common/http';
+import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
+import { Component, signal } from '@angular/core';
+import { type ComponentFixture, TestBed } from '@angular/core/testing';
+import { provideRouter } from '@angular/router';
+import { RouterTestingHarness } from '@angular/router/testing';
+
+describe('StudioCardComponent', () => {
+    let fixture: ComponentFixture<StudioCardComponent>;
+
+    beforeEach(() => {
+        TestBed.configureTestingModule({
+            imports: [StudioCardComponent], // standalone-компонент — в imports
+            providers: [
+                provideHttpClient(),
+                provideHttpClientTesting(),
+                provideRouter([]),
+                { provide: StudioStore, useValue: { studios: signal([]), load: vi.fn() } }, // мок
+            ],
+        });
+        // TestBed.overrideComponent(StudioCardComponent, { set: { providers: [...] } });
+        fixture = TestBed.createComponent(StudioCardComponent);
+    });
+
+    it('входы через setInput', async () => {
+        fixture.componentRef.setInput('studio', DEMO_STUDIO); // как [studio]="…" у родителя
+        await fixture.whenStable(); // дождаться рендера (zoneless)
+        // fixture.detectChanges(); — синхронная проверка
+        const el = fixture.nativeElement as HTMLElement;
+        expect(el.querySelector('h3')?.textContent).toContain('Sound Garden');
+    });
+
+    it('выход', () => {
+        const emitted: string[] = [];
+        fixture.componentInstance.select.subscribe((id) => emitted.push(id)); // у output() есть subscribe
+        (fixture.nativeElement as HTMLElement).querySelector('button')?.click();
+        expect(emitted).toEqual(['sound-garden']);
+    });
+
+    it('сервис и эффекты', () => {
+        const store = TestBed.inject(StudioStore);
+        TestBed.tick(); // прогнать эффекты и рендер
+        expect(store.load).toHaveBeenCalled();
+    });
+
+    it('HTTP', () => {
+        const api = TestBed.inject(StudioApi);
+        const http = TestBed.inject(HttpTestingController);
+        let result: Studio | undefined;
+        api.getById('1').subscribe((s) => (result = s));
+        const req = http.expectOne('/api/studios/1');
+        expect(req.request.method).toBe('GET');
+        req.flush(DEMO_STUDIO); // ответ; ошибка: req.flush('x', { status: 404, statusText: 'Not Found' })
+        expect(result).toEqual(DEMO_STUDIO);
+        http.verify(); // нет лишних запросов
+    });
+
+    it('роутинг', async () => {
+        TestBed.configureTestingModule({ providers: [provideRouter([{ path: 'studios/:id', component: StudioPageComponent }])] });
+        const harness = await RouterTestingHarness.create();
+        const page = await harness.navigateByUrl('/studios/1', StudioPageComponent);
+        expect(page.id()).toBe('1');
+    });
+
+    it('таймеры', () => {
+        vi.useFakeTimers();
+        vi.setSystemTime(new Date(2026, 10, 14, 18, 0));
+        vi.advanceTimersByTime(1000);
+        vi.useRealTimers();
+    });
+
+    it('функция с inject()', () => {
+        TestBed.runInInjectionContext(() => {
+            const result = authGuard(route, state);
+        });
+    });
+});
+
+// Тестовый хост для ng-content и директив
+@Component({
+    imports: [CardComponent],
+    template: `<app-card><h3 cardTitle>Заголовок</h3></app-card>`,
+})
+class HostComponent {}
+
+// Component Harnesses (CDK): устойчивые к разметке тесты
+// const loader = TestbedHarnessEnvironment.loader(fixture);
+// const button = await loader.getHarness(MatButtonHarness.with({ text: 'Сохранить' }));
+// await button.click();
+</script>
+
+<script type="text/x-code" data-section="styles" data-title="Стили компонента" data-path="studio-card.component.scss" data-lead="Селекторы инкапсуляции, CSS-переменные как публичный API, анимации входа и выхода.">
+// ── :host — сам тег компонента ──
+:host {
+    --card-radius: 12px; // публичные переменные: родитель меняет их снаружи
+    --card-border: #d0d4e0;
+    display: block; // у кастомного элемента по умолчанию display: inline
+    contain: content; // изоляция раскладки для производительности
+}
+
+:host(.featured) { --card-border: #6b5bd6; } // класс на самом теге
+:host([disabled]) { opacity: 0.6; } // атрибут на теге
+:host(:hover) { box-shadow: 0 2px 8px rgb(0 0 0 / 10%); }
+:host-context(.dark) { --card-border: #3a3f55; } // класс у любого предка
+
+.card {
+    border: 1px solid var(--card-border);
+    border-radius: var(--card-radius);
+}
+
+// ::ng-deep — устарело и делает стиль глобальным; вместо него CSS-переменные или стили в styles.scss
+// :host ::ng-deep .mat-icon { … }
+
+// ── Настройка дочернего компонента снаружи (в стилях родителя) ──
+// app-studio-card { --card-radius: 16px; }
+
+// ── Анимации для animate.enter / animate.leave ──
+.fade-in { animation: fade-in 200ms ease-out; }
+.fade-out { animation: fade-out 150ms ease-in; } // Angular удалит элемент после окончания анимации
+
+@keyframes fade-in { from { opacity: 0; transform: translateY(4px); } }
+@keyframes fade-out { to { opacity: 0; } }
+
+@media (prefers-reduced-motion: reduce) {
+    .fade-in, .fade-out { animation: none; }
+}
+</script>
+
+<script type="text/x-code" data-section="cli" data-title="Angular CLI" data-path="terminal" data-lead="Команды и генераторы, которые нужны каждый день.">
+ng new studio-slot --style=scss --ssr --zoneless       # новый проект
+ng serve                                               # dev-сервер, http://localhost:4200
+ng serve --open --port 4300 --host 0.0.0.0
+ng build                                               # production по умолчанию → dist/
+ng build --configuration development
+ng build --base-href /studio-slot-course/              # для GitHub Pages
+ng test                                                # unit-тесты (Vitest)
+ng test --watch=false --coverage
+ng lint                                                # ESLint (после ng add @angular-eslint/schematics)
+ng e2e
+ng update                                              # проверить обновления
+ng update @angular/core @angular/cli                   # обновить Angular с миграциями
+ng add @angular/ssr                                    # добавить SSR
+ng add @angular/material
+ng version
+
+# ── Генераторы (ng g = ng generate) ──
+ng g c pages/catalog/ui/catalog-page                   # компонент
+ng g c shared/ui/card --inline-template --inline-style --skip-tests
+ng g d shared/lib/autofocus/autofocus                  # директива
+ng g p shared/lib/plural/plural                        # pipe
+ng g s entities/studio/api/studio-api                  # сервис
+ng g guard core/auth/auth --functional                 # guard (canActivate, canMatch…)
+ng g resolver pages/studio/studio                      # resolver
+ng g interceptor core/http/auth                        # интерсептор
+ng g interface entities/studio/model/studio
+ng g enum shared/model/status
+ng g class shared/lib/money
+ng g environments                                      # src/environments/*
+ng g config karma | browserslist
+ng g web-worker workers/heavy
+
+# ── Миграции на современный синтаксис ──
+ng g @angular/core:control-flow                        # *ngIf/*ngFor → @if/@for
+ng g @angular/core:standalone                          # NgModule → standalone
+ng g @angular/core:inject                              # конструктор → inject()
+ng g @angular/core:signal-input-migration              # @Input → input()
+ng g @angular/core:output-migration                    # @Output → output()
+ng g @angular/core:signal-queries-migration            # @ViewChild → viewChild()
+ng g @angular/core:route-lazy-loading                  # компоненты маршрутов → loadComponent
+ng g @angular/core:self-closing-tag                    # <x></x> → <x />
+ng g @angular/core:cleanup-unused-imports
+</script>
+
+<script>
+(function () {
+    const KEYWORDS = new Set(('import export from const let var function return if else for of in new class extends implements ' +
+        'interface type readonly private protected public static async await this true false null undefined void typeof ' +
+        'keyof as is get set throw try catch finally switch case default break continue while do').split(' '));
+
+    function escapeHtml(text) {
+        return text.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+    }
+
+    // Лёгкая подсветка: комментарии, строки, ключевые слова, декораторы и теги
+    function highlight(code, isHtml) {
+        const tokens = [];
+        const pattern = isHtml
+            ? /(<!--[\s\S]*?-->)|("[^"\n]*")|(@[a-z]+)|(<\/?[a-zA-Z][\w-]*)/g
+            : /(\/\/[^\n]*|\/\*[\s\S]*?\*\/|^\s*#[^\n]*)|('(?:[^'\\\n]|\\.)*'|"(?:[^"\\\n]|\\.)*"|`(?:[^`\\]|\\.)*`)|(@[A-Za-z]+)|\b([a-z]+)\b/gm;
+        let last = 0;
+        let match;
+        while ((match = pattern.exec(code))) {
+            tokens.push(escapeHtml(code.slice(last, match.index)));
+            const [text, comment, string, deco, word] = match;
+            if (comment) tokens.push('<span class="t-c">' + escapeHtml(text) + '</span>');
+            else if (string) tokens.push('<span class="t-s">' + escapeHtml(text) + '</span>');
+            else if (deco) tokens.push('<span class="t-k">' + escapeHtml(text) + '</span>');
+            else if (isHtml) tokens.push('<span class="t-t">' + escapeHtml(text) + '</span>');
+            else if (KEYWORDS.has(word)) tokens.push('<span class="t-k">' + text + '</span>');
+            else tokens.push(escapeHtml(text));
+            last = match.index + text.length;
+        }
+        tokens.push(escapeHtml(code.slice(last)));
+        return tokens.join('');
+    }
+
+    function dedent(text) {
+        const lines = text.replace(/^\n+|\s+$/g, '').split('\n');
+        const indent = Math.min(...lines.filter((l) => l.trim()).map((l) => l.match(/^ */)[0].length));
+        return lines.map((l) => l.slice(indent)).join('\n');
+    }
+
+    const main = document.getElementById('content');
+    const toc = document.getElementById('toc-list');
+    const empty = document.getElementById('empty');
+    const sections = [];
+
+    document.querySelectorAll('script[type="text/x-code"]').forEach((node) => {
+        const id = node.dataset.section;
+        const code = dedent(node.textContent);
+        const isHtml = /\.html$/.test(node.dataset.path);
+
+        const section = document.createElement('section');
+        section.id = id;
+        section.innerHTML =
+            '<header><h2></h2><span class="path"></span>' + (node.dataset.exp ? '<span class="tag exp">экспериментальное</span>' : '') + '</header>' +
+            '<p></p><div class="code"><div class="bar"><span></span><button class="copy" type="button">Копировать</button></div><pre><code></code></pre></div>';
+        section.querySelector('h2').textContent = node.dataset.title;
+        section.querySelector('.path').textContent = node.dataset.path;
+        section.querySelector('p').textContent = node.dataset.lead;
+        section.querySelector('.bar span').textContent = code.split('\n').length + ' строк';
+        section.querySelector('code').innerHTML = highlight(code, isHtml);
+
+        const button = section.querySelector('.copy');
+        button.addEventListener('click', () => {
+            const done = () => { button.textContent = 'Скопировано'; setTimeout(() => (button.textContent = 'Копировать'), 1500); };
+            if (navigator.clipboard) {
+                navigator.clipboard.writeText(code).then(done, () => selectCode(section));
+            } else {
+                selectCode(section);
+            }
+        });
+
+        main.insertBefore(section, empty);
+
+        const li = document.createElement('li');
+        li.innerHTML = '<a></a>';
+        const a = li.firstChild;
+        a.href = '#' + id;
+        a.innerHTML = '';
+        a.append(document.createTextNode(node.dataset.title + ' '));
+        sections.push({ id, section, li, text: (node.dataset.title + ' ' + code).toLowerCase() });
+        toc.append(li);
+    });
+
+    function selectCode(section) {
+        const range = document.createRange();
+        range.selectNodeContents(section.querySelector('code'));
+        const selection = window.getSelection();
+        selection.removeAllRanges();
+        selection.addRange(range);
+    }
+
+    document.getElementById('filter').addEventListener('input', (event) => {
+        const query = event.target.value.trim().toLowerCase();
+        let visible = 0;
+        sections.forEach(({ section, li, text }) => {
+            const show = !query || text.includes(query);
+            section.hidden = !show;
+            li.hidden = !show;
+            if (show) visible++;
+        });
+        empty.style.display = visible ? 'none' : 'block';
+    });
+
+    // Подсветка текущего раздела в оглавлении
+    if ('IntersectionObserver' in window) {
+        const links = new Map(sections.map((s) => [s.id, s.li.firstChild]));
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach((entry) => {
+                if (entry.isIntersecting) {
+                    links.forEach((link) => link.classList.remove('active'));
+                    links.get(entry.target.id)?.classList.add('active');
+                }
+            });
+        }, { rootMargin: '-20% 0px -70% 0px' });
+        sections.forEach((s) => observer.observe(s.section));
+    }
+
+    if (location.hash) {
+        document.getElementById(location.hash.slice(1))?.scrollIntoView();
+    }
+})();
+</script>
+
+</body></html>
